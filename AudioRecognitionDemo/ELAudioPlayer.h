@@ -12,7 +12,7 @@
 
 #define kNumberOfBuffers 3              //AudioQueueBuffer数量，一般指明为3
 #define kAQBufSize  128*1024            //每个AudioQueueBuffer的大小
-#define kAudioFileBufferSize 128*1048   //文件读取数据的缓冲区大小
+#define kAudioFileBufferSize 10*1048   //文件读取数据的缓冲区大小
 #define kMaxPacketDesc 128*1048         //最大的AudioStreamPacketDescription个数
 
 @class ELAudioPlayer;

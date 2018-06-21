@@ -9,6 +9,16 @@
 /* Begin PBXBuildFile section */
 		8D22640820DB3E7200BD5201 /* FinalAudio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8D22640720DB3E7200BD5201 /* FinalAudio.wav */; };
 		8D22640C20DB816B00BD5201 /* zhong.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 8D22640B20DB816A00BD5201 /* zhong.pcm */; };
+		8D3CA56D20DB90220001C91D /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CA56120DB90220001C91D /* AFURLResponseSerialization.m */; };
+		8D3CA56E20DB90220001C91D /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CA56220DB90220001C91D /* AFHTTPSessionManager.m */; };
+		8D3CA56F20DB90220001C91D /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CA56320DB90220001C91D /* AFURLConnectionOperation.m */; };
+		8D3CA57020DB90220001C91D /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CA56520DB90220001C91D /* AFURLSessionManager.m */; };
+		8D3CA57120DB90220001C91D /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CA56620DB90220001C91D /* AFHTTPRequestOperationManager.m */; };
+		8D3CA57220DB90220001C91D /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CA56720DB90220001C91D /* AFURLRequestSerialization.m */; };
+		8D3CA57320DB90220001C91D /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CA56820DB90220001C91D /* AFHTTPRequestOperation.m */; };
+		8D3CA57420DB90220001C91D /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CA56A20DB90220001C91D /* AFNetworkReachabilityManager.m */; };
+		8D3CA57520DB90220001C91D /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CA56B20DB90220001C91D /* AFSecurityPolicy.m */; };
+		8D3CA57820DB92FB0001C91D /* ELAudioRecognitioner.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3CA57720DB92FB0001C91D /* ELAudioRecognitioner.m */; };
 		8D3F3E0F20D10E1400AC2EEC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3F3E0E20D10E1400AC2EEC /* AppDelegate.m */; };
 		8D3F3E1220D10E1400AC2EEC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3F3E1120D10E1400AC2EEC /* ViewController.m */; };
 		8D3F3E1720D10E1600AC2EEC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D3F3E1620D10E1600AC2EEC /* Assets.xcassets */; };
@@ -23,6 +33,27 @@
 		8D22640720DB3E7200BD5201 /* FinalAudio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = FinalAudio.wav; sourceTree = "<group>"; };
 		8D22640A20DB3FF000BD5201 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		8D22640B20DB816A00BD5201 /* zhong.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = zhong.pcm; sourceTree = "<group>"; };
+		8D3CA55A20DB90220001C91D /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFSecurityPolicy.h; sourceTree = "<group>"; };
+		8D3CA55B20DB90220001C91D /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
+		8D3CA55C20DB90220001C91D /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
+		8D3CA55D20DB90220001C91D /* AFHTTPRequestOperationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperationManager.h; sourceTree = "<group>"; };
+		8D3CA55E20DB90220001C91D /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
+		8D3CA55F20DB90220001C91D /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLRequestSerialization.h; sourceTree = "<group>"; };
+		8D3CA56020DB90220001C91D /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
+		8D3CA56120DB90220001C91D /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
+		8D3CA56220DB90220001C91D /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionManager.m; sourceTree = "<group>"; };
+		8D3CA56320DB90220001C91D /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
+		8D3CA56420DB90220001C91D /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLResponseSerialization.h; sourceTree = "<group>"; };
+		8D3CA56520DB90220001C91D /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
+		8D3CA56620DB90220001C91D /* AFHTTPRequestOperationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperationManager.m; sourceTree = "<group>"; };
+		8D3CA56720DB90220001C91D /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLRequestSerialization.m; sourceTree = "<group>"; };
+		8D3CA56820DB90220001C91D /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
+		8D3CA56920DB90220001C91D /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
+		8D3CA56A20DB90220001C91D /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
+		8D3CA56B20DB90220001C91D /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFSecurityPolicy.m; sourceTree = "<group>"; };
+		8D3CA56C20DB90220001C91D /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
+		8D3CA57620DB92FB0001C91D /* ELAudioRecognitioner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ELAudioRecognitioner.h; sourceTree = "<group>"; };
+		8D3CA57720DB92FB0001C91D /* ELAudioRecognitioner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ELAudioRecognitioner.m; sourceTree = "<group>"; };
 		8D3F3E0A20D10E1400AC2EEC /* 音频测试.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "音频测试.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D3F3E0D20D10E1400AC2EEC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8D3F3E0E20D10E1400AC2EEC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -50,6 +81,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8D3CA55920DB90220001C91D /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				8D3CA55A20DB90220001C91D /* AFSecurityPolicy.h */,
+				8D3CA55B20DB90220001C91D /* AFNetworkReachabilityManager.h */,
+				8D3CA55C20DB90220001C91D /* AFHTTPRequestOperation.h */,
+				8D3CA55D20DB90220001C91D /* AFHTTPRequestOperationManager.h */,
+				8D3CA55E20DB90220001C91D /* AFURLSessionManager.h */,
+				8D3CA55F20DB90220001C91D /* AFURLRequestSerialization.h */,
+				8D3CA56020DB90220001C91D /* AFURLConnectionOperation.h */,
+				8D3CA56120DB90220001C91D /* AFURLResponseSerialization.m */,
+				8D3CA56220DB90220001C91D /* AFHTTPSessionManager.m */,
+				8D3CA56320DB90220001C91D /* AFURLConnectionOperation.m */,
+				8D3CA56420DB90220001C91D /* AFURLResponseSerialization.h */,
+				8D3CA56520DB90220001C91D /* AFURLSessionManager.m */,
+				8D3CA56620DB90220001C91D /* AFHTTPRequestOperationManager.m */,
+				8D3CA56720DB90220001C91D /* AFURLRequestSerialization.m */,
+				8D3CA56820DB90220001C91D /* AFHTTPRequestOperation.m */,
+				8D3CA56920DB90220001C91D /* AFNetworking.h */,
+				8D3CA56A20DB90220001C91D /* AFNetworkReachabilityManager.m */,
+				8D3CA56B20DB90220001C91D /* AFSecurityPolicy.m */,
+				8D3CA56C20DB90220001C91D /* AFHTTPSessionManager.h */,
+			);
+			path = AFNetworking;
+			sourceTree = "<group>";
+		};
 		8D3F3E0120D10E1400AC2EEC = {
 			isa = PBXGroup;
 			children = (
@@ -70,6 +127,7 @@
 		8D3F3E0C20D10E1400AC2EEC /* AudioRecognitionDemo */ = {
 			isa = PBXGroup;
 			children = (
+				8D3CA55920DB90220001C91D /* AFNetworking */,
 				8D22640720DB3E7200BD5201 /* FinalAudio.wav */,
 				8D22640B20DB816A00BD5201 /* zhong.pcm */,
 				8D3F3E2D20D8D21300AC2EEC /* MP3Sample.mp3 */,
@@ -77,6 +135,8 @@
 				8D3F3E2920D2125E00AC2EEC /* ELAudioPlayer.m */,
 				8D3F3E2320D11C3A00AC2EEC /* ELAudioRecorder.h */,
 				8D3F3E2420D11C3A00AC2EEC /* ELAudioRecorder.m */,
+				8D3CA57620DB92FB0001C91D /* ELAudioRecognitioner.h */,
+				8D3CA57720DB92FB0001C91D /* ELAudioRecognitioner.m */,
 				8D3F3E0D20D10E1400AC2EEC /* AppDelegate.h */,
 				8D3F3E0E20D10E1400AC2EEC /* AppDelegate.m */,
 				8D3F3E1020D10E1400AC2EEC /* ViewController.h */,
@@ -161,10 +221,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D3CA57520DB90220001C91D /* AFSecurityPolicy.m in Sources */,
+				8D3CA57320DB90220001C91D /* AFHTTPRequestOperation.m in Sources */,
+				8D3CA57420DB90220001C91D /* AFNetworkReachabilityManager.m in Sources */,
+				8D3CA57820DB92FB0001C91D /* ELAudioRecognitioner.m in Sources */,
+				8D3CA57020DB90220001C91D /* AFURLSessionManager.m in Sources */,
+				8D3CA56F20DB90220001C91D /* AFURLConnectionOperation.m in Sources */,
+				8D3CA57120DB90220001C91D /* AFHTTPRequestOperationManager.m in Sources */,
 				8D3F3E1220D10E1400AC2EEC /* ViewController.m in Sources */,
 				8D3F3E2520D11C3A00AC2EEC /* ELAudioRecorder.m in Sources */,
 				8D3F3E1D20D10E1700AC2EEC /* main.m in Sources */,
 				8D3F3E2A20D2125E00AC2EEC /* ELAudioPlayer.m in Sources */,
+				8D3CA57220DB90220001C91D /* AFURLRequestSerialization.m in Sources */,
+				8D3CA56D20DB90220001C91D /* AFURLResponseSerialization.m in Sources */,
+				8D3CA56E20DB90220001C91D /* AFHTTPSessionManager.m in Sources */,
 				8D3F3E0F20D10E1400AC2EEC /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

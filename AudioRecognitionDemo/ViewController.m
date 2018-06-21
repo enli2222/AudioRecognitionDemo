@@ -85,9 +85,9 @@
 -(IBAction)onPlay:(id)sender{
 //    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"MP3Sample" ofType:@"mp3"];
 //    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"FinalAudio" ofType:@"wav"];
-//    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"zhong" ofType:@"pcm"];
-    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
-    NSString *audioFile = [path stringByAppendingPathComponent:@"FinalAudio.pcm"];
+    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"zhong" ofType:@"pcm"];
+//    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+//    NSString *audioFile = [path stringByAppendingPathComponent:@"FinalAudio.pcm"];
     if (_player) {
         btnPlay.backgroundColor = [UIColor blueColor];
         [btnPlay setTitle:@"播放" forState:UIControlStateNormal];

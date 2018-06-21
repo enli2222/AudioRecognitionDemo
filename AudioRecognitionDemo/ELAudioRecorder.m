@@ -165,9 +165,7 @@
     
     audioDescription.mBytesPerFrame = (audioDescription.mBitsPerChannel / 8) * audioDescription.mChannelsPerFrame;
     audioDescription.mBytesPerPacket = audioDescription.mBytesPerFrame;
-    
     audioDescription.mReserved = 0;
-    
 }
 
 -(void)processAudioBuffer:(AudioQueueBufferRef)inBuffer inStartTime:(const AudioTimeStamp *)inStartTime inNumPackets:(UInt32)inNumPackets{
