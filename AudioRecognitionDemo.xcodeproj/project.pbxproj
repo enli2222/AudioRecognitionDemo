@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D22640620DB399D00BD5201 /* test16K16bit.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 8D22640520DB399D00BD5201 /* test16K16bit.pcm */; };
 		8D22640820DB3E7200BD5201 /* FinalAudio.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8D22640720DB3E7200BD5201 /* FinalAudio.wav */; };
+		8D22640C20DB816B00BD5201 /* zhong.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 8D22640B20DB816A00BD5201 /* zhong.pcm */; };
 		8D3F3E0F20D10E1400AC2EEC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3F3E0E20D10E1400AC2EEC /* AppDelegate.m */; };
 		8D3F3E1220D10E1400AC2EEC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D3F3E1120D10E1400AC2EEC /* ViewController.m */; };
 		8D3F3E1720D10E1600AC2EEC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D3F3E1620D10E1600AC2EEC /* Assets.xcassets */; };
@@ -20,9 +20,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8D22640520DB399D00BD5201 /* test16K16bit.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = test16K16bit.pcm; sourceTree = "<group>"; };
 		8D22640720DB3E7200BD5201 /* FinalAudio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = FinalAudio.wav; sourceTree = "<group>"; };
 		8D22640A20DB3FF000BD5201 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
+		8D22640B20DB816A00BD5201 /* zhong.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = zhong.pcm; sourceTree = "<group>"; };
 		8D3F3E0A20D10E1400AC2EEC /* 音频测试.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "音频测试.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D3F3E0D20D10E1400AC2EEC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8D3F3E0E20D10E1400AC2EEC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -71,7 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				8D22640720DB3E7200BD5201 /* FinalAudio.wav */,
-				8D22640520DB399D00BD5201 /* test16K16bit.pcm */,
+				8D22640B20DB816A00BD5201 /* zhong.pcm */,
 				8D3F3E2D20D8D21300AC2EEC /* MP3Sample.mp3 */,
 				8D3F3E2820D2125E00AC2EEC /* ELAudioPlayer.h */,
 				8D3F3E2920D2125E00AC2EEC /* ELAudioPlayer.m */,
@@ -147,8 +147,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D3F3E1A20D10E1600AC2EEC /* LaunchScreen.storyboard in Resources */,
+				8D22640C20DB816B00BD5201 /* zhong.pcm in Resources */,
 				8D3F3E2E20D8D21400AC2EEC /* MP3Sample.mp3 in Resources */,
-				8D22640620DB399D00BD5201 /* test16K16bit.pcm in Resources */,
 				8D22640820DB3E7200BD5201 /* FinalAudio.wav in Resources */,
 				8D3F3E1720D10E1600AC2EEC /* Assets.xcassets in Resources */,
 			);

@@ -4,7 +4,9 @@
 //
 //  Created by enli on 2018/6/13.
 //  Copyright © 2018年 enli. All rights reserved.
-//
+// 参考https://blog.csdn.net/xiaoluodecai/article/details/47153945
+
+
 #define kNumberAudioQueueBuffers 3  //定义了三个缓冲区
 #define kDefaultBufferDurationSeconds 0.04//0.1279   //调整这个值使得录音的缓冲区大小为2048bytes
 #define kDefaultSampleRate 8000   //定义采样率为8000
@@ -17,6 +19,7 @@
     AudioStreamBasicDescription audioDescription; //音频格式
     AudioQueueRef audioQueue; //音频播放队列
     AudioQueueBufferRef audioQueueBuffers[kNumberAudioQueueBuffers]; //音频缓存
+    NSString *_filePath;
 }
 @end
 
@@ -24,11 +27,12 @@
 @synthesize isRecording=_isRecording;
 @synthesize delegate=_delegate;
 
--(instancetype)initWithFormat:(UInt32)sampleRate depthKey:(UInt32)bitDepthKey{
+-(instancetype)initWithPath:(NSString *)filePath{
     self = [super init];
     if (self) {
         _isRecording = false;
         _delegate = nil;
+        _filePath = filePath;
         [self setupAudioFormat];
     }
     return self;
@@ -67,7 +71,6 @@
     // 开始录音
     AudioQueueStart(audioQueue, NULL);
     _isRecording = YES;
-    
     
 }
 
@@ -146,6 +149,17 @@
     
 }
 
+-(void)processAudioBuffer:(AudioQueueBufferRef)inBuffer inStartTime:(const AudioTimeStamp *)inStartTime inNumPackets:(UInt32)inNumPackets{
+    NSData *data = [[NSData alloc]initWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
+    
+    if (_delegate) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self->_delegate ElAudioRecorderChangePower:self power:inNumPackets msg:@"来啦"];
+        });
+    }
+}
+
+
 //相当于中断服务函数，每次录取到音频数据就进入这个函数
 //inAQ 是调用回调函数的音频队列
 //inBuffer 是一个被音频队列填充新的音频数据的音频队列缓冲区，它包含了回调函数写入文件所需要的新数据
@@ -159,17 +173,9 @@ void inputBufferHandler(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRe
     ELAudioRecorder * recorder = (__bridge ELAudioRecorder *) inUserData;
     if (inNumPackets > 0)
     {
-        if ([NSThread isMainThread]) {
-            NSLog(@"主线程: %u",(unsigned int)inNumPackets);
-        }else{
-            NSLog(@"辅线程: %u",(unsigned int)inNumPackets);
-        }
-        if (recorder.delegate) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [recorder.delegate ElAudioRecorderChangePower:recorder power:inNumPackets msg:@"来啦"];
-            });
-        }
-//        [recorder processAudioBuffer:inBuffer withQueue:inAQ];
+        //在音频线程
+        NSLog(@"inNumPackets: %u, DataByteSize:%u",(unsigned int)inNumPackets,(unsigned int)inBuffer->mAudioDataByteSize);
+        [recorder processAudioBuffer:inBuffer inStartTime:inStartTime inNumPackets:inNumPackets];
     }
     
     if (recorder.isRecording) {

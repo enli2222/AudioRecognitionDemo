@@ -21,7 +21,7 @@
 @interface ELAudioRecorder : NSObject
 @property (atomic,assign,readonly) BOOL isRecording;
 @property (nonatomic,weak)id<ELAudioRecorderDelegate> delegate;
--(instancetype)initWithFormat:(UInt32)sampleRate depthKey:(UInt32)bitDepthKey;
+-(instancetype)initWithPath:(NSString *)filePath;
 -(void)recordStart;
 -(void)recordEnd;
 
