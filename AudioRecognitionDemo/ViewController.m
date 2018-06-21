@@ -82,7 +82,8 @@
 
 -(IBAction)onPlay:(id)sender{
 //    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"MP3Sample" ofType:@"mp3"];
-    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"test16K16bit" ofType:@"pcm"];    
+    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"FinalAudio" ofType:@"wav"];
+//    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"test16K16bit" ofType:@"pcm"];
     if (_player) {
         btnPlay.backgroundColor = [UIColor blueColor];
         [btnPlay setTitle:@"播放" forState:UIControlStateNormal];
