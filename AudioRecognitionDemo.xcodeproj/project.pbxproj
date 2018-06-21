@@ -22,7 +22,7 @@
 /* Begin PBXFileReference section */
 		8D22640520DB399D00BD5201 /* test16K16bit.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = test16K16bit.pcm; sourceTree = "<group>"; };
 		8D22640720DB3E7200BD5201 /* FinalAudio.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = FinalAudio.wav; sourceTree = "<group>"; };
-		8D22640920DB3F4300BD5201 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
+		8D22640A20DB3FF000BD5201 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		8D3F3E0A20D10E1400AC2EEC /* 音频测试.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "音频测试.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D3F3E0D20D10E1400AC2EEC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8D3F3E0E20D10E1400AC2EEC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -53,6 +53,7 @@
 		8D3F3E0120D10E1400AC2EEC = {
 			isa = PBXGroup;
 			children = (
+				8D22640A20DB3FF000BD5201 /* readme.md */,
 				8D3F3E0C20D10E1400AC2EEC /* AudioRecognitionDemo */,
 				8D3F3E0B20D10E1400AC2EEC /* Products */,
 			);
@@ -84,7 +85,6 @@
 				8D3F3E1820D10E1600AC2EEC /* LaunchScreen.storyboard */,
 				8D3F3E1B20D10E1700AC2EEC /* Info.plist */,
 				8D3F3E1C20D10E1700AC2EEC /* main.m */,
-				8D22640920DB3F4300BD5201 /* readme.md */,
 			);
 			path = AudioRecognitionDemo;
 			sourceTree = "<group>";
