@@ -20,6 +20,7 @@
     AudioQueueRef audioQueue; //音频播放队列
     AudioQueueBufferRef audioQueueBuffers[kNumberAudioQueueBuffers]; //音频缓存
     NSString *_filePath;
+    NSFileHandle *_audioFileHandle;
 }
 @end
 
@@ -34,6 +35,7 @@
         _delegate = nil;
         _filePath = filePath;
         [self setupAudioFormat];
+        [self createFile];
     }
     return self;
 }
@@ -42,6 +44,21 @@
 {
     AudioQueueStop(audioQueue, true);
     AudioQueueDispose(audioQueue, true);
+    if (_audioFileHandle) {
+        [_audioFileHandle closeFile];
+        _audioFileHandle = nil;
+    }
+}
+
+-(void)createFile{
+    _audioFileHandle = nil;
+    NSError *err;
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if ([fm fileExistsAtPath:_filePath]) {
+        [fm removeItemAtPath:_filePath error:&err];
+    }
+    [fm createFileAtPath:_filePath contents:nil attributes:nil];
+    _audioFileHandle = [NSFileHandle fileHandleForWritingAtPath:_filePath];
 }
 
 -(void)recordStart{
@@ -80,6 +97,10 @@
         //停止录音队列和移除缓冲区,以及关闭session，这里无需考虑成功与否
         AudioQueueStop(audioQueue, true);
         AudioQueueDispose(audioQueue, true);
+        if (_audioFileHandle) {
+            [_audioFileHandle closeFile];
+            _audioFileHandle = nil;
+        }
         [self afterEnd];
     }
 }
@@ -151,7 +172,9 @@
 
 -(void)processAudioBuffer:(AudioQueueBufferRef)inBuffer inStartTime:(const AudioTimeStamp *)inStartTime inNumPackets:(UInt32)inNumPackets{
     NSData *data = [[NSData alloc]initWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
-    
+    if (_audioFileHandle && data.length > 0) {
+        [_audioFileHandle writeData:data];
+    }
     if (_delegate) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self->_delegate ElAudioRecorderChangePower:self power:inNumPackets msg:@"来啦"];

@@ -65,8 +65,9 @@
 -(IBAction)onRecordStart:(id)sender{
     if (!_recorder) {
         txtResult.text = @"";
-        NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"FinalAudio" ofType:@"wav"];
-        _recorder = [[ELAudioRecorder alloc]initWithPath:audioFile];
+        NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+        NSString *filePath = [path stringByAppendingPathComponent:@"FinalAudio.pcm"];
+        _recorder = [[ELAudioRecorder alloc]initWithPath:filePath];
         _recorder.delegate = self;
         [_recorder recordStart];
         btnRecord.backgroundColor = [UIColor redColor];
@@ -84,7 +85,9 @@
 -(IBAction)onPlay:(id)sender{
 //    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"MP3Sample" ofType:@"mp3"];
 //    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"FinalAudio" ofType:@"wav"];
-    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"zhong" ofType:@"pcm"];
+//    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"zhong" ofType:@"pcm"];
+    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    NSString *audioFile = [path stringByAppendingPathComponent:@"FinalAudio.pcm"];
     if (_player) {
         btnPlay.backgroundColor = [UIColor blueColor];
         [btnPlay setTitle:@"播放" forState:UIControlStateNormal];
