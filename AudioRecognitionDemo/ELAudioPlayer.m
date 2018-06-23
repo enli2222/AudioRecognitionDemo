@@ -139,10 +139,9 @@
 
 -(BOOL)ParsePCM:(NSData *)inInputData{
     OSStatus err;
-    
     if(audioQueueCurrentBufferIndex==99) [self createQueue];
     UInt64 mDataByteSize = inInputData.length;
-    NSLog(@"mDataByteSize:%llu,audioDataBytesFilled:%llu",mDataByteSize,kAQBufSize - audioDataBytesFilled);
+//    NSLog(@"mDataByteSize:%llu,audioDataBytesFilled:%llu",mDataByteSize,kAQBufSize - audioDataBytesFilled);
     if (mDataByteSize > kAQBufSize - audioDataBytesFilled){
         err = AudioQueueEnqueueBuffer(_audioQueue, audioQueueBuffers[audioQueueCurrentBufferIndex], 0, NULL);
         audioQueueCurrentBufferIndex = (audioQueueCurrentBufferIndex + 1) % kNumberOfBuffers;
