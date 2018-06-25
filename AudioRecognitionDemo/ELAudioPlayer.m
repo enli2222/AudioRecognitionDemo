@@ -25,6 +25,7 @@
     NSInteger audioQueueCurrentBufferIndex; //当前填充的buffer序号
     NSString *_filePath;
     AudioFileTypeID _audioFileType;
+    ELAudioRecognitioner *recognitioner;
     BOOL _isFinishing,_isPCMFile;
 }
 
@@ -42,6 +43,7 @@
         _isFinishing = NO;
         _isPCMFile = NO;
         _filePath = filePath;
+        _audioFileType = [self hintForFileExtension:[_filePath pathExtension]];
         _audioFileLength = 0;
         _bitRate = 0;
         audioQueueCurrentBufferIndex = 99;
@@ -59,6 +61,9 @@
     if (_audioQueue != nil) {
         AudioQueueStop(_audioQueue, true);
         _audioQueue = nil;
+    }
+    if (recognitioner) {
+        recognitioner = nil;
     }
     sysnLock = nil;
 }
@@ -130,11 +135,33 @@
 }
 
 -(void)play{
-    NSLog(@"%s",__func__);
-    if (![self prePlay])
-        return;
-    _audioFileType = [self hintForFileExtension:[_filePath pathExtension]];
+    if (![self prePlay]) return;
     [self playByThread];
+}
+
+-(void)playMsg:(NSString *)msg{
+    NSError *err;
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if ([fm fileExistsAtPath:_filePath]) {
+        if ([msg length]>0) {
+            [fm removeItemAtPath:_filePath error:&err];
+            [self downloadAudio:msg];
+        }else{
+            [self play];
+        }
+    }else{
+        if ([msg length]>0) {
+            [self downloadAudio:msg];
+        }
+    }
+}
+
+-(void)downloadAudio:(NSString *)msg{
+    if (!recognitioner) {
+        recognitioner = [[ELAudioRecognitioner alloc]initWithURL:@"服务器地址"];
+        recognitioner.delegate = self;
+        [recognitioner TTS:msg];
+    }
 }
 
 -(BOOL)ParsePCM:(NSData *)inInputData{
@@ -415,6 +442,11 @@
     AudioQueueDispose(_audioQueue, true);
     _audioQueue = nil;
     AudioFileStreamClose(audioFileStreamID);
+}
+
+-(void)ResponseTTS:(NSData *)data{
+    [data writeToFile:_filePath atomically:YES];
+    [self play];
 }
 
 - (AudioFileTypeID)hintForFileExtension:(NSString *)fileExtension

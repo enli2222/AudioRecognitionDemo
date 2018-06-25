@@ -95,7 +95,8 @@
     _isRecording = YES;
 }
 
--(void)recordEnd{
+-(BOOL)recordEnd{
+    BOOL result = NO;
     if (self.isRecording) {
         _isRecording = NO;
         //停止录音队列和移除缓冲区,以及关闭session，这里无需考虑成功与否
@@ -104,19 +105,22 @@
         if (_audioFileHandle) {
             [_audioFileHandle closeFile];
             _audioFileHandle = nil;
-            [self postMsg];
+            result = [self postMsg];
         }
         [self afterEnd];
     }
+    return result;
 }
 
--(void)postMsg{
+-(BOOL)postMsg{
     NSData *data = [NSData dataWithContentsOfFile:_filePath];
-    if (!recognitioner) {
+    if (!recognitioner && [data length] > 0) {
         recognitioner = [[ELAudioRecognitioner alloc] initWithURL:@"识别URL"];
         recognitioner.delegate = self;
         [recognitioner ASR:data];
+        return YES;
     }
+    return NO;
 }
 
 -(void)ResponseASR:(NSString *)msg{

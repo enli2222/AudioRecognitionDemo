@@ -21,9 +21,9 @@
 
 @interface ELAudioRecorder : NSObject<ELAudioRecognitionerDelegate>
 @property (atomic,assign,readonly) BOOL isRecording;
-@property (nonatomic,weak)id<ELAudioRecorderDelegate> delegate;
+@property (nonatomic,assign)id<ELAudioRecorderDelegate> delegate;
 -(instancetype)initWithPath:(NSString *)filePath;
 -(void)recordStart;
--(void)recordEnd;
+-(BOOL)recordEnd;
 
 @end

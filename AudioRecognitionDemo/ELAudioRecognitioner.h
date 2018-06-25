@@ -16,13 +16,10 @@
 -(void)ResponseTTS:(NSData *)data;
 @end
 
-@interface ELAudioRecognitioner : NSObject
+@interface ELAudioRecognitioner : NSObject<NSXMLParserDelegate>
 @property (nonatomic,weak)id<ELAudioRecognitionerDelegate> delegate;
 -(instancetype)initWithURL:(NSString *)url;
 -(void)ASR:(NSData *)data;
 -(void)TTS:(NSString *)Msg;
-
-
-
 
 @end

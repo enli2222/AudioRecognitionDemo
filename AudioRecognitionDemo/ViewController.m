@@ -10,6 +10,7 @@
 
 @interface ViewController (){
     UIButton *btnRecord,*btnPlay;
+    UIActivityIndicatorView * activityIndicator;
     UITextView *txtResult;
     ELAudioRecorder *_recorder;
     ELAudioPlayer *_player;
@@ -59,7 +60,19 @@
     txtResult.layer.borderWidth = 1;
     txtResult.layer.cornerRadius =5;
     txtResult.delegate =self;
+    txtResult.text = @"淡淡的忧伤!";
     [self.view addSubview:txtResult];
+    
+    activityIndicator = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:(UIActivityIndicatorViewStyleGray)];
+    [self.view addSubview:activityIndicator];
+    //设置小菊花的frame
+    activityIndicator.frame= self.view.bounds;
+    //设置小菊花颜色
+    activityIndicator.color = [UIColor redColor];
+    //设置背景颜色
+    activityIndicator.backgroundColor = [UIColor clearColor];
+    //刚进入这个界面会显示控件，并且停止旋转也会显示，只是没有在转动而已，没有设置或者设置为YES的时候，刚进入页面不会显示
+    activityIndicator.hidesWhenStopped = YES;
 }
 
 -(IBAction)onRecordStart:(id)sender{
@@ -76,18 +89,26 @@
 
 -(IBAction)onRecordEnd:(id)sender{
     if (_recorder) {
-        [_recorder recordEnd];
-        _recorder = nil;
+        if([_recorder recordEnd]){
+            [activityIndicator startAnimating];
+        }else{
+            _recorder = nil;
+        }
         btnRecord.backgroundColor = [UIColor blueColor];
     }
 }
 
 -(IBAction)onPlay:(id)sender{
+    NSString *msg = [txtResult text];
+    if ([msg length] > 1000) {
+        NSLog(@"字符超长:%u",(unsigned int)[msg length]);
+        return;
+    }
 //    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"MP3Sample" ofType:@"mp3"];
 //    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"FinalAudio" ofType:@"wav"];
-    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"zhong" ofType:@"pcm"];
-//    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
-//    NSString *audioFile = [path stringByAppendingPathComponent:@"FinalAudio.pcm"];
+//    NSString *audioFile= [[NSBundle mainBundle] pathForResource:@"zhong" ofType:@"pcm"];
+    NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    NSString *audioFile = [path stringByAppendingPathComponent:@"FinalAudio.pcm"];
     if (_player) {
         btnPlay.backgroundColor = [UIColor blueColor];
         [btnPlay setTitle:@"播放" forState:UIControlStateNormal];
@@ -98,15 +119,15 @@
         [btnPlay setTitle:@"停止" forState:UIControlStateNormal];
         _player = [[ELAudioPlayer alloc] initWithURL:audioFile];
         _player.delegate = self;
-        [_player play];
+        [_player playMsg:msg];
     }
-    
-
 }
 
 -(void)ElAudioRecorderChangePower:(ELAudioRecorder *)recorder power:(int)power msg:(NSString *)msg{
     NSString *_msg = [txtResult.text stringByAppendingString:msg];
     txtResult.text = _msg;
+    _recorder = nil;
+    [activityIndicator stopAnimating];
 }
 
 -(void)ELAudioPlayEnd:(ELAudioPlayer *)player{
