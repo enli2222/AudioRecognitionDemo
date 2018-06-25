@@ -21,6 +21,7 @@
     AudioQueueBufferRef audioQueueBuffers[kNumberAudioQueueBuffers]; //音频缓存
     NSString *_filePath;
     NSFileHandle *_audioFileHandle;
+    ELAudioRecognitioner *recognitioner;
 }
 @end
 
@@ -34,8 +35,9 @@
         _isRecording = false;
         _delegate = nil;
         _filePath = filePath;
+        recognitioner = nil;
+        _audioFileHandle = nil;
         [self setupAudioFormat];
-        [self createFile];
     }
     return self;
 }
@@ -48,10 +50,12 @@
         [_audioFileHandle closeFile];
         _audioFileHandle = nil;
     }
+    if (recognitioner) {
+        recognitioner = nil;
+    }
 }
 
--(void)createFile{
-    _audioFileHandle = nil;
+-(BOOL)createFile{
     NSError *err;
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([fm fileExistsAtPath:_filePath]) {
@@ -59,13 +63,14 @@
     }
     [fm createFileAtPath:_filePath contents:nil attributes:nil];
     _audioFileHandle = [NSFileHandle fileHandleForWritingAtPath:_filePath];
+    return YES;
 }
 
 -(void)recordStart{
     if (![self preStart]) {
         return;
     }
-    
+    [self createFile];
     //初始化音频输入队列
     //inputBufferHandler这个是回调函数名
     AudioQueueNewInput(&audioDescription, inputBufferHandler, (__bridge void *)(self), NULL, kCFRunLoopCommonModes, 0, &audioQueue);
@@ -88,7 +93,6 @@
     // 开始录音
     AudioQueueStart(audioQueue, NULL);
     _isRecording = YES;
-    
 }
 
 -(void)recordEnd{
@@ -100,8 +104,29 @@
         if (_audioFileHandle) {
             [_audioFileHandle closeFile];
             _audioFileHandle = nil;
+            [self postMsg];
         }
         [self afterEnd];
+    }
+}
+
+-(void)postMsg{
+    NSData *data = [NSData dataWithContentsOfFile:_filePath];
+    if (!recognitioner) {
+        recognitioner = [[ELAudioRecognitioner alloc] initWithURL:@"识别URL"];
+        recognitioner.delegate = self;
+        [recognitioner ASR:data];
+    }
+}
+
+-(void)ResponseASR:(NSString *)msg{
+    if (_delegate) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self->_delegate ElAudioRecorderChangePower:self power:1 msg:msg];
+        });
+    }
+    if (recognitioner) {
+        recognitioner = nil;
     }
 }
 
@@ -173,11 +198,6 @@
     if (_audioFileHandle && data.length > 0) {
         [_audioFileHandle writeData:data];
     }
-    if (_delegate) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self->_delegate ElAudioRecorderChangePower:self power:inNumPackets msg:@"来啦"];
-        });
-    }
 }
 
 
@@ -195,7 +215,7 @@ void inputBufferHandler(void *inUserData, AudioQueueRef inAQ, AudioQueueBufferRe
     if (inNumPackets > 0)
     {
         //在音频线程
-        NSLog(@"inNumPackets: %u, DataByteSize:%u",(unsigned int)inNumPackets,(unsigned int)inBuffer->mAudioDataByteSize);
+//        NSLog(@"inNumPackets: %u, DataByteSize:%u",(unsigned int)inNumPackets,(unsigned int)inBuffer->mAudioDataByteSize);
         [recorder processAudioBuffer:inBuffer inStartTime:inStartTime inNumPackets:inNumPackets];
     }
     

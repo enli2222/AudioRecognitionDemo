@@ -30,17 +30,18 @@
     return  output;
 }
 
--(instancetype)initWithURL:(NSURL *)url{
+-(instancetype)initWithURL:(NSString *)url{
     self = [super init];
     if (self) {
-        requestASRURL = @"http://xxxx:xxxx/asr/Recognise";
-        requestTTSURL = @"http://xxxx:xxxx/tts/SynthText";
+        requestASRURL = @"http:///asr/Recognise";
+        requestTTSURL = @"http:///tts/SynthText";
         dev_key = @"developer_key";
     }
     return self;
 }
 
 -(void)ASR:(NSData *)data{
+    __weak typeof(self) weakSelf = self;
     NSDateFormatter *formater = [[NSDateFormatter alloc]init];
     [formater setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *currentDate = [formater stringFromDate:[NSDate date]];
@@ -58,6 +59,7 @@
     [request setValue:@"101:1234567890" forHTTPHeaderField:@"x-udid"];
     [request setHTTPBody:data];
     AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
+//    AFHTTPResponseSerializer *responseSerializer = [AFXMLParserResponseSerializer serializer];
     responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",
                                                  @"text/html",
                                                  @"text/json",
@@ -67,15 +69,22 @@
     manager.responseSerializer = responseSerializer;
     [[manager dataTaskWithRequest:request completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
         if (!error) {
-            NSLog(@"ok,%@",responseObject);
+            NSString * str  =[[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+            NSLog(@"ok,%@",str);
+//            NSXMLParser *parser = (NSXMLParser *)responseObject;
+//            NSDictionary *dic = [NSDictionary dictionaryWithXMLParser:parser];
 //            success([weakSelf processResponse:responseObject]);
         } else {
             NSLog(@"request error = %@",error);
+        }
+        if (weakSelf.delegate) {
+            [weakSelf.delegate ResponseASR:@"完成"];
         }
     }] resume];
 }
 
 -(void)TTS:(NSString *)Msg{
+    __weak typeof(self) weakSelf = self;
     AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:requestASRURL parameters:nil error:nil];
     request.timeoutInterval = 30;
@@ -95,6 +104,9 @@
             //            success([weakSelf processResponse:responseObject]);
         } else {
             NSLog(@"request error = %@",error);
+        }
+        if (weakSelf.delegate) {
+            [weakSelf.delegate ResponseTTS:nil];
         }
     }] resume];
 }

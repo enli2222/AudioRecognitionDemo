@@ -10,7 +10,7 @@
 #import "ELAudioRecorder.h"
 #import "ELAudioPlayer.h"
 
-@interface ViewController : UIViewController<ELAudioRecorderDelegate,ELAudioPlayerDelegate>
+@interface ViewController : UIViewController<ELAudioRecorderDelegate,ELAudioPlayerDelegate,UITextViewDelegate>
 
 
 @end

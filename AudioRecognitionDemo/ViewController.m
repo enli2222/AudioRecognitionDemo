@@ -42,7 +42,7 @@
     btnRecord.titleLabel.font = [UIFont systemFontOfSize:15.0];
     [self.view addSubview:btnRecord];
     
-    txtResult = [[UITextView alloc] initWithFrame:CGRectMake(20, 20, width - 40, top - 150)];
+    txtResult = [[UITextView alloc] initWithFrame:CGRectMake(20, 32, width - 40, top - 180)];
     // 设置文本字体
     txtResult.font = [UIFont fontWithName:@"Arial" size:16.5f];
     // 设置文本颜色
@@ -58,7 +58,7 @@
     txtResult.layer.borderColor = [UIColor redColor].CGColor;
     txtResult.layer.borderWidth = 1;
     txtResult.layer.cornerRadius =5;
-    
+    txtResult.delegate =self;
     [self.view addSubview:txtResult];
 }
 
@@ -113,6 +113,15 @@
     [btnPlay setTitle:@"播放" forState:UIControlStateNormal];
     btnPlay.backgroundColor = [UIColor blueColor];
     _player = nil;
+}
+
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    if ([text isEqualToString:@"\n"]) {
+        [textView resignFirstResponder];
+        return NO;
+    }
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning {

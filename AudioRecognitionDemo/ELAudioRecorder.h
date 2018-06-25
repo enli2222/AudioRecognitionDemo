@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import "ELAudioRecognitioner.h"
 
 @class ELAudioRecorder;
 @protocol ELAudioRecorderDelegate
@@ -18,7 +19,7 @@
 @end
 
 
-@interface ELAudioRecorder : NSObject
+@interface ELAudioRecorder : NSObject<ELAudioRecognitionerDelegate>
 @property (atomic,assign,readonly) BOOL isRecording;
 @property (nonatomic,weak)id<ELAudioRecorderDelegate> delegate;
 -(instancetype)initWithPath:(NSString *)filePath;

@@ -18,7 +18,7 @@
 
 @interface ELAudioRecognitioner : NSObject
 @property (nonatomic,weak)id<ELAudioRecognitionerDelegate> delegate;
--(instancetype)initWithURL:(NSURL *)url;
+-(instancetype)initWithURL:(NSString *)url;
 -(void)ASR:(NSData *)data;
 -(void)TTS:(NSString *)Msg;
 
