@@ -444,9 +444,19 @@
     AudioFileStreamClose(audioFileStreamID);
 }
 
--(void)ResponseTTS:(NSData *)data{
-    [data writeToFile:_filePath atomically:YES];
-    [self play];
+-(void)ResponseTTS:(NSData *)data result:(NSString *)msg{
+    if (data) {
+        [data writeToFile:_filePath atomically:YES];
+        [self play];
+    }else{
+        if (_delegate) {
+            //通知主线程刷新
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self->_delegate ELAudioPlayEnd:self];
+            });
+        }
+    }
+
 }
 
 - (AudioFileTypeID)hintForFileExtension:(NSString *)fileExtension

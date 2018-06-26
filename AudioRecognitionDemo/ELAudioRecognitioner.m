@@ -13,6 +13,7 @@
 
 @interface ELAudioRecognitioner(){
     NSString *requestASRURL,*requestTTSURL,*dev_key,*node_name;
+    BOOL _msgIsNUll;
 }
 @end
 
@@ -33,8 +34,8 @@
 -(instancetype)initWithURL:(NSString *)url{
     self = [super init];
     if (self) {
-        requestASRURL = @"http://服务器地址/asr/Recognise";
-        requestTTSURL = @"http://服务器地址/tts/SynthText";
+        requestASRURL = @"http:///asr/Recognise";
+        requestTTSURL = @"http:///tts/SynthText";
         dev_key = @"developer_key";
         node_name = @"";
     }
@@ -48,6 +49,7 @@
 
 -(void)ASR:(NSData *)data{
     __weak typeof(self) weakSelf = self;
+    _msgIsNUll = YES;
     NSDateFormatter *formater = [[NSDateFormatter alloc]init];
     [formater setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *currentDate = [formater stringFromDate:[NSDate date]];
@@ -137,10 +139,13 @@
             NSRange iEnd = [tmp rangeOfString:@"</ResponseInfo>"];
             NSLog(@"ok,%@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
             if (weakSelf.delegate && ([data length] > (iEnd.location + iEnd.length))) {
-                [weakSelf.delegate ResponseTTS:[data subdataWithRange:NSMakeRange(iEnd.location + iEnd.length, [data length]- iEnd.location - iEnd.length)]];
+                [weakSelf.delegate ResponseTTS:[data subdataWithRange:NSMakeRange(iEnd.location + iEnd.length, [data length]- iEnd.location - iEnd.length)]  result:nil];
             }
         } else {
             NSLog(@"request error = %@",error.description);
+            if (weakSelf.delegate) {
+                [weakSelf.delegate ResponseTTS:nil result:error.description];
+            }
         }
 
     }] resume];
@@ -159,7 +164,12 @@
 
 -(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName{
     NSLog(@"解析结束:%@",elementName);
+    
+    if (_delegate && _msgIsNUll && [node_name length] > 0) {
+        [_delegate ResponseASR:@"error: 未识别出内容!"];
+    }
     node_name = @"";
+    
 }
 
 -(void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string{
@@ -174,6 +184,7 @@
      */
     if (_delegate && [node_name length] > 0) {
         [_delegate ResponseASR:string];
+        _msgIsNUll = NO;
     }
 }
 

@@ -78,12 +78,13 @@
 -(IBAction)onRecordStart:(id)sender{
     if (!_recorder) {
         txtResult.text = @"";
+        btnRecord.backgroundColor = [UIColor redColor];
         NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
         NSString *filePath = [path stringByAppendingPathComponent:@"FinalAudio.pcm"];
         _recorder = [[ELAudioRecorder alloc]initWithPath:filePath];
         _recorder.delegate = self;
         [_recorder recordStart];
-        btnRecord.backgroundColor = [UIColor redColor];
+        
     }
 }
 

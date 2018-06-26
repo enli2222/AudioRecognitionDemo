@@ -13,7 +13,7 @@
 @required
 @optional
 -(void)ResponseASR:(NSString *)msg;
--(void)ResponseTTS:(NSData *)data;
+-(void)ResponseTTS:(NSData *)data result:(NSString *)msg;
 @end
 
 @interface ELAudioRecognitioner : NSObject<NSXMLParserDelegate>
