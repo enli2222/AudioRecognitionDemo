@@ -357,10 +357,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.enterprise.qilu.tongda;
+				PRODUCT_BUNDLE_IDENTIFIER = com.enterprise.qilu.jr;
 				PRODUCT_NAME = "音频测试";
-				PROVISIONING_PROFILE = "1384081a-2cc3-4c16-a704-345a1ef6afaa";
-				PROVISIONING_PROFILE_SPECIFIER = "Dev Enterprise QLTD";
+				PROVISIONING_PROFILE = "5bce548a-821f-41da-b734-bd9fbcfee709";
+				PROVISIONING_PROFILE_SPECIFIER = "Dev Enterprise Qljr";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -369,16 +369,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = W8S3N3PF3U;
 				INFOPLIST_FILE = AudioRecognitionDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.enterprise.qilu.tongda;
+				PRODUCT_BUNDLE_IDENTIFIER = com.enterprise.qilu.jr;
 				PRODUCT_NAME = "音频测试";
-				PROVISIONING_PROFILE_SPECIFIER = "Dev Enterprise QLTD";
+				PROVISIONING_PROFILE = "033559cc-f124-482e-ba3b-5ea33dd75e77";
+				PROVISIONING_PROFILE_SPECIFIER = "Release Enterprise Qljr";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

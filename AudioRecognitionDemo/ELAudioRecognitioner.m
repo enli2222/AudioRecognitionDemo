@@ -33,8 +33,8 @@
 -(instancetype)initWithURL:(NSString *)url{
     self = [super init];
     if (self) {
-        requestASRURL = @"http://服务地址/asr/Recognise";
-        requestTTSURL = @"http://服务地址/tts/SynthText";
+        requestASRURL = @"http://服务器地址/asr/Recognise";
+        requestTTSURL = @"http://服务器地址/tts/SynthText";
         dev_key = @"developer_key";
         node_name = @"";
     }
