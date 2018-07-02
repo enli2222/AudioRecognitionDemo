@@ -66,8 +66,8 @@
     [request setValue:session forHTTPHeaderField:@"x-session-key"];
     [request setValue:@"101:1234567890" forHTTPHeaderField:@"x-udid"];
     [request setHTTPBody:data];
-//    AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
-    AFHTTPResponseSerializer *responseSerializer = [AFXMLParserResponseSerializer serializer];
+    AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
+//    AFHTTPResponseSerializer *responseSerializer = [AFXMLParserResponseSerializer serializer];
     responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",
                                                  @"text/html",
                                                  @"text/json",
@@ -77,10 +77,10 @@
     manager.responseSerializer = responseSerializer;
     [[manager dataTaskWithRequest:request completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
         if (!error) {
-//            NSString * str  =[[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-//            NSLog(@"ok,%@",str);
-//            NSXMLParser *parser = [[NSXMLParser alloc]initWithData:responseObject];
-            NSXMLParser *parser = (NSXMLParser *)responseObject;
+            NSString * str  =[[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+            NSLog(@"ok,%@",str);
+            NSXMLParser *parser = [[NSXMLParser alloc]initWithData:responseObject];
+//            NSXMLParser *parser = (NSXMLParser *)responseObject;
              parser.delegate = self;
             [parser setShouldProcessNamespaces:YES];
             if (![parser parse]) {
@@ -89,7 +89,9 @@
                     [weakSelf.delegate ResponseASR:parser.parserError.description];
                 }
             }
-            
+            if (weakSelf.delegate && self->_msgIsNUll) {
+                [weakSelf.delegate ResponseASR:str];
+            }
         } else {
             NSLog(@"请求失败:%@",error.description);
             if (weakSelf.delegate) {
@@ -135,12 +137,20 @@
                     break;
                 }
             }
+            if (ipos==0) {
+                ipos = (unsigned int)([data length] > 1000?1000:[data length]);
+            }
             NSString* tmp = [[NSString alloc] initWithData:[data subdataWithRange:NSMakeRange(0, ipos)] encoding:NSUTF8StringEncoding];
             NSRange iEnd = [tmp rangeOfString:@"</ResponseInfo>"];
             NSLog(@"ok,%@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-            if (weakSelf.delegate && ([data length] > (iEnd.location + iEnd.length))) {
-                [weakSelf.delegate ResponseTTS:[data subdataWithRange:NSMakeRange(iEnd.location + iEnd.length, [data length]- iEnd.location - iEnd.length)]  result:nil];
+            if (weakSelf.delegate) {
+                if ([data length] > (iEnd.location + iEnd.length)) {
+                                    [weakSelf.delegate ResponseTTS:[data subdataWithRange:NSMakeRange(iEnd.location + iEnd.length, [data length]- iEnd.location - iEnd.length)]  result:nil];
+                }else{
+                    [weakSelf.delegate ResponseTTS:nil result:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
+                }
             }
+
         } else {
             NSLog(@"request error = %@",error.description);
             if (weakSelf.delegate) {
@@ -152,21 +162,21 @@
 }
 
 -(void)parserDidStartDocument:(NSXMLParser *)parser{
-    NSLog(@"开始解析文件");
+//    NSLog(@"开始解析文件");
 }
 
 -(void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary<NSString *,NSString *> *)attributeDict{
-    NSLog(@"开始解析:%@",elementName);
+//    NSLog(@"开始解析:%@",elementName);
     if ([elementName isEqualToString: @"Result"]) {
         node_name = elementName;
     }
 }
 
 -(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName{
-    NSLog(@"解析结束:%@",elementName);
-    
+//    NSLog(@"解析结束:%@",elementName);
     if (_delegate && _msgIsNUll && [node_name length] > 0) {
         [_delegate ResponseASR:@"error: 未识别出内容!"];
+        _msgIsNUll = NO;
     }
     node_name = @"";
     
@@ -189,7 +199,7 @@
 }
 
 -(void)parserDidEndDocument:(NSXMLParser *)parser{
-    NSLog(@"结束解析文件");
+//    NSLog(@"结束解析文件");
 }
 
 

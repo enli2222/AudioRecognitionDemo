@@ -131,7 +131,10 @@
     [activityIndicator stopAnimating];
 }
 
--(void)ELAudioPlayEnd:(ELAudioPlayer *)player{
+-(void)ELAudioPlayEnd:(NSString *)msg{
+    if (msg) {
+        txtResult.text = msg;
+    }
     [btnPlay setTitle:@"播放" forState:UIControlStateNormal];
     btnPlay.backgroundColor = [UIColor blueColor];
     _player = nil;

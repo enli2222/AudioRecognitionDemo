@@ -417,7 +417,7 @@
             if (_delegate) {
                 //通知主线程刷新
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self->_delegate ELAudioPlayEnd:self];
+                    [self->_delegate ELAudioPlayEnd:nil];
                 });
             }
         }
@@ -452,7 +452,7 @@
         if (_delegate) {
             //通知主线程刷新
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self->_delegate ELAudioPlayEnd:self];
+                [self->_delegate ELAudioPlayEnd:msg];
             });
         }
     }

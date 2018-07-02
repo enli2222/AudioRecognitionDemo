@@ -20,7 +20,7 @@
 @protocol ELAudioPlayerDelegate
 @required
 @optional
--(void)ELAudioPlayEnd:(ELAudioPlayer *)player;
+-(void)ELAudioPlayEnd:(NSString *)msg;
 @end
 
 @interface ELAudioPlayer : NSObject<ELAudioRecognitionerDelegate>
