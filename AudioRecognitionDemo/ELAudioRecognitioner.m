@@ -35,8 +35,8 @@
 -(instancetype)initWithURL:(NSString *)url{
     self = [super init];
     if (self) {
-        requestASRURL = @"http://114.55.158.126:8880/asr/Recognise";
-        requestTTSURL = @"http://114.55.158.126:8880/tts/SynthText";
+        requestASRURL = @"";
+        requestTTSURL = @"";
         dev_key = @"developer_key";
         index = 0;
         xmlfields = [[NSMutableArray alloc]init];
