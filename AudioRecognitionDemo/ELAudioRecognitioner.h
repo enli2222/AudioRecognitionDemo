@@ -12,13 +12,16 @@
 @protocol ELAudioRecognitionerDelegate
 @required
 @optional
--(void)ResponseASR:(NSString *)msg;
--(void)ResponseTTS:(NSData *)data result:(NSString *)msg;
+//音频转文字
+-(void)ResponseASR:(NSString *)msg result:(NSString *)err;
+//文字转音频
+-(void)ResponseTTS:(NSData *)data result:(NSString *)err;
 @end
 
 @interface ELAudioRecognitioner : NSObject<NSXMLParserDelegate>
 @property (nonatomic,weak)id<ELAudioRecognitionerDelegate> delegate;
 -(instancetype)initWithURL:(NSString *)url;
+-(void)ASR:(NSData *)data identify:(NSInteger)identify endFlag:(BOOL)flag;
 -(void)ASR:(NSData *)data;
 -(void)TTS:(NSString *)Msg;
 

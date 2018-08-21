@@ -9,7 +9,7 @@
 #import "ViewController.h"
 
 @interface ViewController (){
-    UIButton *btnRecord,*btnPlay;
+    UIButton *btnRecord,*btnPlay,*btnReal;
     UIActivityIndicatorView * activityIndicator;
     UITextView *txtResult;
     ELAudioRecorder *_recorder;
@@ -28,7 +28,7 @@
     
     btnPlay = [UIButton buttonWithType:UIButtonTypeCustom];
     btnPlay.backgroundColor = [UIColor blueColor];
-    btnPlay.frame = CGRectMake(20, top - 110 , width - 40, 40);
+    btnPlay.frame = CGRectMake(20, top - 170 , width - 40, 40);
     [btnPlay addTarget:self action:@selector(onPlay:) forControlEvents:UIControlEventTouchUpInside];
     [btnPlay setTitle:@"播放" forState:UIControlStateNormal];
     btnPlay.titleLabel.font = [UIFont systemFontOfSize:15.0];
@@ -36,14 +36,23 @@
     
     btnRecord = [UIButton buttonWithType:UIButtonTypeCustom];
     btnRecord.backgroundColor = [UIColor blueColor];
-    btnRecord.frame = CGRectMake(20, top - 50 , width - 40, 40);
+    btnRecord.frame = CGRectMake(20, top - 110 , width - 40, 40);
     [btnRecord addTarget:self action:@selector(onRecordStart:) forControlEvents:UIControlEventTouchDown];
     [btnRecord addTarget:self action:@selector(onRecordEnd:) forControlEvents:UIControlEventTouchUpInside];
     [btnRecord setTitle:@"录音" forState:UIControlStateNormal];
     btnRecord.titleLabel.font = [UIFont systemFontOfSize:15.0];
     [self.view addSubview:btnRecord];
     
-    txtResult = [[UITextView alloc] initWithFrame:CGRectMake(20, 32, width - 40, top - 180)];
+    btnReal = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnReal.backgroundColor = [UIColor blueColor];
+    btnReal.frame = CGRectMake(20, top - 50 , width - 40, 40);
+    [btnReal addTarget:self action:@selector(onRealStart:) forControlEvents:UIControlEventTouchDown];
+    [btnReal addTarget:self action:@selector(onRealEnd:) forControlEvents:UIControlEventTouchUpInside];
+    [btnReal setTitle:@"实时翻译" forState:UIControlStateNormal];
+    btnReal.titleLabel.font = [UIFont systemFontOfSize:15.0];
+    [self.view addSubview:btnReal];
+    
+    txtResult = [[UITextView alloc] initWithFrame:CGRectMake(20, 32, width - 40, top - 220)];
     // 设置文本字体
     txtResult.font = [UIFont fontWithName:@"Arial" size:16.5f];
     // 设置文本颜色
@@ -84,7 +93,6 @@
         _recorder = [[ELAudioRecorder alloc]initWithPath:filePath];
         _recorder.delegate = self;
         [_recorder recordStart];
-        
     }
 }
 
@@ -92,10 +100,27 @@
     if (_recorder) {
         if([_recorder recordEnd]){
             [activityIndicator startAnimating];
-        }else{
-            _recorder = nil;
         }
         btnRecord.backgroundColor = [UIColor blueColor];
+    }
+}
+
+-(IBAction)onRealStart:(id)sender{
+    if (!_recorder) {
+        txtResult.text = @"";
+        btnReal.backgroundColor = [UIColor redColor];
+        _recorder = [[ELAudioRecorder alloc]initWithPath:nil];
+        _recorder.delegate = self;
+        [_recorder recordStart];
+    }
+}
+
+-(IBAction)onRealEnd:(id)sender{
+    if (_recorder) {
+        if([_recorder recordEnd]){
+            [activityIndicator startAnimating];
+        }
+        btnReal.backgroundColor = [UIColor blueColor];
     }
 }
 
@@ -124,11 +149,19 @@
     }
 }
 
--(void)ElAudioRecorderChangePower:(ELAudioRecorder *)recorder power:(int)power msg:(NSString *)msg{
-    NSString *_msg = [txtResult.text stringByAppendingString:msg];
-    txtResult.text = _msg;
-    _recorder = nil;
-    [activityIndicator stopAnimating];
+-(void)ElAudioRecorderChangePower:(NSString *)msg result:(NSString *)err{
+    if ([err isEqualToString:@"Failed"]) {
+        txtResult.text = [NSString stringWithFormat:@"%@ - %@", err, msg];
+        _recorder = nil;
+        [activityIndicator stopAnimating];
+    }else{
+//        NSString *_msg = [txtResult.text stringByAppendingString:msg];
+        txtResult.text = [NSString stringWithFormat:@"%@\n\r%@",txtResult.text,msg];
+        if ([err isEqualToString:@"Success"]) {
+            _recorder = nil;
+            [activityIndicator stopAnimating];
+        }
+    }
 }
 
 -(void)ELAudioPlayEnd:(NSString *)msg{
@@ -153,7 +186,5 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
 
 @end

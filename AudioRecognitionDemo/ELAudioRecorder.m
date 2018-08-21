@@ -10,6 +10,7 @@
 #define kNumberAudioQueueBuffers 3  //定义了三个缓冲区
 #define kDefaultBufferDurationSeconds 0.04//0.1279   //调整这个值使得录音的缓冲区大小为2048bytes
 #define kDefaultSampleRate 8000   //定义采样率为8000
+#define kNumberBuffer 50
 #define kDefaultChcannels 1
 
 
@@ -21,7 +22,10 @@
     AudioQueueBufferRef audioQueueBuffers[kNumberAudioQueueBuffers]; //音频缓存
     NSString *_filePath;
     NSFileHandle *_audioFileHandle;
+    NSMutableData *_sendBuffer;
     ELAudioRecognitioner *recognitioner;
+    int bufferByteSize;
+    NSInteger identify;
 }
 @end
 
@@ -37,6 +41,7 @@
         _filePath = filePath;
         recognitioner = nil;
         _audioFileHandle = nil;
+        _sendBuffer = nil;
         [self setupAudioFormat];
     }
     return self;
@@ -44,6 +49,7 @@
 
 - (void)dealloc
 {
+    NSLog(@"%s",__func__);
     AudioQueueStop(audioQueue, true);
     AudioQueueDispose(audioQueue, true);
     if (_audioFileHandle) {
@@ -70,17 +76,24 @@
     if (![self preStart]) {
         return;
     }
-    [self createFile];
-    //初始化音频输入队列
-    //inputBufferHandler这个是回调函数名
-    AudioQueueNewInput(&audioDescription, inputBufferHandler, (__bridge void *)(self), NULL, kCFRunLoopCommonModes, 0, &audioQueue);
     
+    identify = arc4random()*10000;
     
     //计算估算的缓存区大小
     int frames = (int)ceil(kDefaultBufferDurationSeconds * audioDescription.mSampleRate);//返回大于或者等于指定表达式的最小整数
-    int bufferByteSize = frames * audioDescription.mBytesPerFrame;//缓冲区大小在这里设置，这个很重要，在这里设置的缓冲区有多大，那么在回调函数的时候得到的inbuffer的大小就是多大。
+    bufferByteSize = frames * audioDescription.mBytesPerFrame;//缓冲区大小在这里设置，这个很重要，在这里设置的缓冲区有多大，那么在回调函数的时候得到的inbuffer的大小就是多大。
     bufferByteSize = kDefaultChcannels * audioDescription.mBitsPerChannel * audioDescription.mSampleRate / 8 * 0.02;
     NSLog(@"缓冲区大小:%d",bufferByteSize);
+    
+    if (_filePath) {
+        [self createFile];
+    }else{
+        _sendBuffer = [[NSMutableData alloc]initWithCapacity:bufferByteSize*kNumberBuffer];
+    }
+    
+    //初始化音频输入队列
+    //inputBufferHandler这个是回调函数名
+    AudioQueueNewInput(&audioDescription, inputBufferHandler, (__bridge void *)(self), NULL, kCFRunLoopCommonModes, 0, &audioQueue);
     
     //创建缓冲器
     for (int i = 0; i < kNumberAudioQueueBuffers; i++){
@@ -102,35 +115,56 @@
         //停止录音队列和移除缓冲区,以及关闭session，这里无需考虑成功与否
         AudioQueueStop(audioQueue, true);
         AudioQueueDispose(audioQueue, true);
+        [self postData:YES];
         if (_audioFileHandle) {
             [_audioFileHandle closeFile];
             _audioFileHandle = nil;
-            result = [self postMsg];
         }
+        if (_sendBuffer) {
+            result = _sendBuffer.length > 0;
+            _sendBuffer.length = 0;
+            _sendBuffer = nil;
+        }
+        
         [self afterEnd];
     }
     return result;
 }
 
--(BOOL)postMsg{
-    NSData *data = [NSData dataWithContentsOfFile:_filePath];
-    if (!recognitioner && [data length] > 0) {
+//-(BOOL)postMsg{
+//    NSData *data = [NSData dataWithContentsOfFile:_filePath];
+//    if (!recognitioner && [data length] > 0) {
+//        recognitioner = [[ELAudioRecognitioner alloc] initWithURL:@"识别URL"];
+//        recognitioner.delegate = self;
+//        [recognitioner ASR:data];
+//        return YES;
+//    }
+//    return NO;
+//}
+
+-(void)postData:(BOOL)endFlag{
+    if (!recognitioner) {
         recognitioner = [[ELAudioRecognitioner alloc] initWithURL:@"识别URL"];
         recognitioner.delegate = self;
-        [recognitioner ASR:data];
-        return YES;
     }
-    return NO;
+    NSData *data;
+    if (_filePath) {
+        data = [NSMutableData dataWithContentsOfFile:_filePath];
+    };
+    if (_sendBuffer) {
+        data = [NSData dataWithData:_sendBuffer];
+        _sendBuffer.length = 0;
+    }
+    [recognitioner ASR:data identify:identify endFlag:endFlag];
 }
 
--(void)ResponseASR:(NSString *)msg{
+
+
+-(void)ResponseASR:(NSString *)msg result:(NSString *)err{
     if (_delegate) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self->_delegate ElAudioRecorderChangePower:self power:1 msg:msg];
+            [self->_delegate ElAudioRecorderChangePower:msg result:err];
         });
-    }
-    if (recognitioner) {
-        recognitioner = nil;
     }
 }
 
@@ -142,7 +176,6 @@
         return false;
     }
     //启用audio session
-    
     ret = [[AVAudioSession sharedInstance] setActive:YES error:&error];
     if (!ret && error )
     {
@@ -199,9 +232,19 @@
 
 -(void)processAudioBuffer:(AudioQueueBufferRef)inBuffer inStartTime:(const AudioTimeStamp *)inStartTime inNumPackets:(UInt32)inNumPackets{
     NSData *data = [[NSData alloc]initWithBytes:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
-    if (_audioFileHandle && data.length > 0) {
-        [_audioFileHandle writeData:data];
+    if (data.length > 0) {
+        if (_audioFileHandle) {
+            [_audioFileHandle writeData:data];
+        }
+        if (_sendBuffer) {
+            if (_sendBuffer.length + data.length > bufferByteSize*kNumberBuffer) {
+                [self postData:NO];
+            }
+            [_sendBuffer appendData:data];
+            NSLog(@"sendbuffer: %ld",_sendBuffer.length);
+        }
     }
+
 }
 
 

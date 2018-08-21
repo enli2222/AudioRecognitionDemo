@@ -444,7 +444,7 @@
     AudioFileStreamClose(audioFileStreamID);
 }
 
--(void)ResponseTTS:(NSData *)data result:(NSString *)msg{
+-(void)ResponseTTS:(NSData *)data result:(NSString *)err{
     if (data) {
         [data writeToFile:_filePath atomically:YES];
         [self play];
@@ -452,7 +452,7 @@
         if (_delegate) {
             //通知主线程刷新
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self->_delegate ELAudioPlayEnd:msg];
+                [self->_delegate ELAudioPlayEnd:err];
             });
         }
     }

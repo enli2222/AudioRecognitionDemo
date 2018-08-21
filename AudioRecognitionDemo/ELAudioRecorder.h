@@ -14,7 +14,7 @@
 @class ELAudioRecorder;
 @protocol ELAudioRecorderDelegate
 @required
--(void)ElAudioRecorderChangePower:(ELAudioRecorder *)recorder power:(int)power msg:(NSString *)msg;
+-(void)ElAudioRecorderChangePower:(NSString *)msg result:(NSString *)err;
 @optional
 @end
 

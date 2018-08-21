@@ -12,8 +12,9 @@
 #import "AFNetworking.h"
 
 @interface ELAudioRecognitioner(){
-    NSString *requestASRURL,*requestTTSURL,*dev_key,*node_name;
-    BOOL _msgIsNUll;
+    NSString *requestASRURL,*requestTTSURL,*dev_key,*res,*msg;
+    NSInteger index; //语音的第几个包
+    NSMutableArray *xmlfields;
 }
 @end
 
@@ -34,10 +35,11 @@
 -(instancetype)initWithURL:(NSString *)url{
     self = [super init];
     if (self) {
-        requestASRURL = @"http:///asr/Recognise";
-        requestTTSURL = @"http:///tts/SynthText";
+        requestASRURL = @"http://114.55.158.126:8880/asr/Recognise";
+        requestTTSURL = @"http://114.55.158.126:8880/tts/SynthText";
         dev_key = @"developer_key";
-        node_name = @"";
+        index = 0;
+        xmlfields = [[NSMutableArray alloc]init];
     }
     return self;
 }
@@ -48,21 +50,29 @@
 }
 
 -(void)ASR:(NSData *)data{
+    [self ASR:data identify:arc4random()*10000 endFlag:YES];
+}
+
+-(void)ASR:(NSData *)data identify:(NSInteger)identify endFlag:(BOOL)flag{
     __weak typeof(self) weakSelf = self;
-    _msgIsNUll = YES;
     NSDateFormatter *formater = [[NSDateFormatter alloc]init];
     [formater setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *currentDate = [formater stringFromDate:[NSDate date]];
-    NSString *config = [NSString stringWithFormat:@"audioformat=pcm16k16bit,capkey=asr.cloud.freetalk,property=chinese_16k_music,index=-1,identify=%d",arc4random()*10000];
+    index ++;
+    if (flag) {
+        index = 0 - index;
+    }
+    NSString *config = [NSString stringWithFormat:@"task=recognise,audioformat=pcm16k16bit,capkey=asr.cloud.freetalk,property=chinese_16k_music,realtime=yes-rt,index=%d,identify=%d",index,identify];
     NSString *session = [self md5:[NSString stringWithFormat:@"%@%@",currentDate,dev_key]];
     AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:requestASRURL parameters:nil error:nil];
     request.timeoutInterval = 30;
     [request setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:@"ac5d5452" forHTTPHeaderField:@"x-app-key"];
+    [request setValue:@"3c5d5495" forHTTPHeaderField:@"x-app-key"];
     [request setValue:@"5.0" forHTTPHeaderField:@"x-sdk-version"];
     [request setValue:currentDate forHTTPHeaderField:@"x-request-date"];
     [request setValue:config forHTTPHeaderField:@"x-task-config"];
+    NSLog(@"x-task-config:%@",config);
     [request setValue:session forHTTPHeaderField:@"x-session-key"];
     [request setValue:@"101:1234567890" forHTTPHeaderField:@"x-udid"];
     [request setHTTPBody:data];
@@ -78,7 +88,7 @@
     [[manager dataTaskWithRequest:request completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
         if (!error) {
             NSString * str  =[[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-            NSLog(@"ok,%@",str);
+            NSLog(@"%@",str);
             NSXMLParser *parser = [[NSXMLParser alloc]initWithData:responseObject];
 //            NSXMLParser *parser = (NSXMLParser *)responseObject;
              parser.delegate = self;
@@ -86,16 +96,16 @@
             if (![parser parse]) {
                 NSLog(@"解析失败:%@",parser.parserError);
                 if (weakSelf.delegate) {
-                    [weakSelf.delegate ResponseASR:parser.parserError.description];
+                    [weakSelf.delegate ResponseASR:@"" result: parser.parserError.description];
                 }
             }
-            if (weakSelf.delegate && self->_msgIsNUll) {
-                [weakSelf.delegate ResponseASR:str];
+            if (weakSelf.delegate) {
+                [weakSelf.delegate ResponseASR:self->msg result:self->res];
             }
         } else {
             NSLog(@"请求失败:%@",error.description);
             if (weakSelf.delegate) {
-                [weakSelf.delegate ResponseASR:error.description];
+                [weakSelf.delegate ResponseASR:@"" result:error.description];
             }
         }
 
@@ -113,7 +123,7 @@
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:requestTTSURL parameters:nil error:nil];
     request.timeoutInterval = 40;
     [request setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:@"ac5d5452" forHTTPHeaderField:@"x-app-key"];
+    [request setValue:@"3c5d5495" forHTTPHeaderField:@"x-app-key"];
     [request setValue:@"5.0" forHTTPHeaderField:@"x-sdk-version"];
     [request setValue:currentDate forHTTPHeaderField:@"x-request-date"];
     [request setValue:config forHTTPHeaderField:@"x-task-config"];
@@ -162,28 +172,43 @@
 }
 
 -(void)parserDidStartDocument:(NSXMLParser *)parser{
+    //清理返回xml解析内容
+    [xmlfields removeAllObjects];
+    msg = @"";
+    res = @"";
 //    NSLog(@"开始解析文件");
 }
 
 -(void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary<NSString *,NSString *> *)attributeDict{
 //    NSLog(@"开始解析:%@",elementName);
-    if ([elementName isEqualToString: @"Result"]) {
-        node_name = elementName;
-    }
+    [xmlfields addObject:elementName];
 }
 
 -(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName{
 //    NSLog(@"解析结束:%@",elementName);
-    if (_delegate && _msgIsNUll && [node_name length] > 0) {
-        [_delegate ResponseASR:@"error: 未识别出内容!"];
-        _msgIsNUll = NO;
-    }
-    node_name = @"";
+    [xmlfields removeLastObject];
+//    if (_delegate && _msgIsNUll && [node_name length] > 0) {
+//        [_delegate ResponseASR:@"error: 未识别出内容!"];
+//        _msgIsNUll = NO;
+//    }
+
     
 }
 
 -(void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string{
-    NSLog(@"发现:%@",string);
+    
+    NSString *lastfield = @"";
+    if (xmlfields.count > 0) {
+        lastfield = xmlfields.lastObject;
+    }
+//    NSString *field = @"";
+//    for (int i = 0; i<[xmlfields count]; i++) {
+//        field =  [field  stringByAppendingString:(NSString *)xmlfields[i]];
+//        if (i == [xmlfields count] -1 ) {
+//            lastfield = xmlfields[i];
+//        }
+//    }
+//    NSLog(@"%@:%@",field,string);
     /*
      <...>
      <Result>
@@ -192,9 +217,16 @@
      </Result>
      <...>
      */
-    if (_delegate && [node_name length] > 0) {
-        [_delegate ResponseASR:string];
-        _msgIsNUll = NO;
+//    if ([@"ResponseInfoResCode" isEqualToString:field]){
+    if ([@"ResCode" isEqualToString:lastfield]) {
+        res = string;
+    }
+    if ([@"Failed" isEqualToString:res] && [@"ResMessage" isEqualToString:lastfield]) {
+//        res = [NSString stringWithFormat:@"%@ - %@",res,string];
+        msg = string;
+    }
+    if ([@"Text" isEqualToString:lastfield]) {
+        msg = [msg stringByAppendingString:string];
     }
 }
 
