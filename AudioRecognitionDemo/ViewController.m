@@ -150,17 +150,18 @@
 }
 
 -(void)ElAudioRecorderChangePower:(NSString *)msg result:(NSString *)err{
-    if ([err isEqualToString:@"Failed"]) {
-        txtResult.text = [NSString stringWithFormat:@"%@ - %@", err, msg];
-        _recorder = nil;
-        [activityIndicator stopAnimating];
-    }else{
-//        NSString *_msg = [txtResult.text stringByAppendingString:msg];
+    if ([err isEqualToString:@"InProgress"]) {
         txtResult.text = [NSString stringWithFormat:@"%@\n\r%@",txtResult.text,msg];
+    }else{
         if ([err isEqualToString:@"Success"]) {
-            _recorder = nil;
-            [activityIndicator stopAnimating];
+            txtResult.text = [NSString stringWithFormat:@"%@\n\r%@",txtResult.text,msg];
+        }else{
+            txtResult.text = [NSString stringWithFormat:@"%@ - %@", err, msg];
         }
+        _recorder = nil;
+        btnReal.backgroundColor = [UIColor blueColor];
+        btnRecord.backgroundColor = [UIColor blueColor];
+        [activityIndicator stopAnimating];
     }
 }
 

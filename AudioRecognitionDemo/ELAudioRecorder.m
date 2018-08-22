@@ -241,7 +241,7 @@
                 [self postData:NO];
             }
             [_sendBuffer appendData:data];
-            NSLog(@"sendbuffer: %ld",_sendBuffer.length);
+//            NSLog(@"sendbuffer: %ld",_sendBuffer.length);
         }
     }
 

@@ -35,8 +35,8 @@
 -(instancetype)initWithURL:(NSString *)url{
     self = [super init];
     if (self) {
-        requestASRURL = @"";
-        requestTTSURL = @"";
+        requestASRURL = @"http://114.55.158.126:8880/asr/Recognise";
+        requestTTSURL = @"http://114.55.158.126:8880/tts/SynthText";
         dev_key = @"developer_key";
         index = 0;
         xmlfields = [[NSMutableArray alloc]init];
@@ -66,7 +66,7 @@
     NSString *session = [self md5:[NSString stringWithFormat:@"%@%@",currentDate,dev_key]];
     AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:requestASRURL parameters:nil error:nil];
-    request.timeoutInterval = 30;
+    request.timeoutInterval = 10;
     [request setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"3c5d5495" forHTTPHeaderField:@"x-app-key"];
     [request setValue:@"5.0" forHTTPHeaderField:@"x-sdk-version"];
@@ -96,7 +96,7 @@
             if (![parser parse]) {
                 NSLog(@"解析失败:%@",parser.parserError);
                 if (weakSelf.delegate) {
-                    [weakSelf.delegate ResponseASR:@"" result: parser.parserError.description];
+                    [weakSelf.delegate ResponseASR:parser.parserError.description result: @"解析失败"];
                 }
             }
             if (weakSelf.delegate) {
@@ -105,7 +105,7 @@
         } else {
             NSLog(@"请求失败:%@",error.description);
             if (weakSelf.delegate) {
-                [weakSelf.delegate ResponseASR:@"" result:error.description];
+                [weakSelf.delegate ResponseASR:error.description result:@"请求失败"];
             }
         }
 
@@ -121,7 +121,7 @@
     NSString *session = [self md5:[NSString stringWithFormat:@"%@%@",currentDate,dev_key]];
     AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"POST" URLString:requestTTSURL parameters:nil error:nil];
-    request.timeoutInterval = 40;
+    request.timeoutInterval = 10;
     [request setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"3c5d5495" forHTTPHeaderField:@"x-app-key"];
     [request setValue:@"5.0" forHTTPHeaderField:@"x-sdk-version"];
